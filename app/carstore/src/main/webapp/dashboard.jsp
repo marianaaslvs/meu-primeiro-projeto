@@ -1,37 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
+<div>
 
-    <div class="container">
+    <c:if test="${sessionScope.loggedUser != null}">
+        <span>${sessionScope.loggedUser}</span>
+        <a href="/logout">Logout</a>
+    </c:if>
 
     <h1>Cars</h1>
-
-    <br>
-
-    <table class="table">
-        <thead>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Image</th>
+            <c:if test="${sessionScope.loggedUser != null}">
+                <th>Actions</th>
+            </c:if>
+        </tr>
+        <c:forEach var="car" items="${cars}">
             <tr>
-                <th>ID</th>
-                <th>Name</th>
+                <td>${car.id}</td>
+                <td>${car.name}</td>
+                <td>${car.color}</td>
+                <td>${car.image}</td>
+                <td>
+                    <c:if test="${sessionScope.loggedUser != null}">
+                        <form action="/delete-car" method="post">
+                            <input type="hidden" id="id" name="id" value="${car.id}">
+                            <button type="submit">Delete</button>
+                            <span> | </span>
+                            <a href="index.jsp?id=${car.id}&name=${car.name}&color=${car.color}">Update</a>
+                        </form>
+                    </c:if>
+                </td>
             </tr>
-        </thead>
-
-        <tbody>
-            <c:forEach var="car" items="${cars}">
-                <tr>
-                    <td>${car.name}</td>
-                    <td>${car.color}</td>
-                </tr>
-            </c:forEach>
-        </tbody>
+        </c:forEach>
     </table>
-    <div>
-
+</div>
 </body>
 </html>
